@@ -1,3 +1,4 @@
+
 $(function(){
   var championsList = [];
   for (champion in champions){
@@ -12,9 +13,12 @@ $('section').on('click', '.selectChar', function(){
   var champion = $(this).prev().val();
   $(this).parent().find('p').empty();
   $(this).parent().find('p').append(champion);
+  $(this).parent().find('.img').empty();
+
+
   var classY = $(this).parent().attr('id');
-  getChar(champion, classY);
-})
+  var newResponse = getChar(champion, classY);
+  })
 
 
 
@@ -29,9 +33,11 @@ function getChar(character, charClass){
   });
 
   getted.done(function(response){
+    console.log(response);
     var stats = response["stats"];
     gameObj[charClass] = new characterz(stats.armor, stats.attackdamage, stats.hp, character);
-
+    $("#" + charClass).find('.img').append('<img src="http://ddragon.leagueoflegends.com/cdn/5.24.2/img/champion/' + response["image"].full + '" />');
+  
   });
 
   getted.fail(function(){

@@ -1,4 +1,5 @@
 var i = 0;
+var h = 0;
 var gameObj = {};
 var char1 = {
   armor: 20,
@@ -16,16 +17,24 @@ var char2 = {
 
 
 function fightLoop(character1, character2){
+  var character1Damage = damageMultiplier(damageDealt(character2.attack1, character1.armor));
+  var character2Damage = damageMultiplier(damageDealt(character1.attack1, character2.armor));
+  character1.health = calculateHealth(character1.health, character1Damage );
+  character2.health = calculateHealth(character2.health, character2Damage);
+  character1.status = returnStatus(character1);
+  character2.status = returnStatus(character2);
+  var damage1 = game.add.text(20, 20 * h, character2.name + " dealt " + character1Damage + " damage to " + character1.name, {font: "14px Arial", fill: "white"});
+  h++;
+  var damage2 = game.add.text(20, 20 * h, character1.name + "dealt " + character2Damage + " damage to " + character2.name, {font: "14px Arial", fill: "white" })
+  h++;
+  var charhealth1 = game.add.text(20, 20 * h, character1.name + " is at " + character1.health.toFixed(0) + " health.", {font: "14px Arial", fill: "white"})
+  h++;
+  var charhealth2 = game.add.text(20, 20 * h, character2.name + " is at " + character2.health.toFixed(0) + " health.", {font: "14px Arial", fill: "white"})
+  h++;
   var winner = detectWinner(character1, character2);
-  if(!winner){
-    character1.health = calculateHealth(character1.health, damageMultiplier(damageDealt(character2.attack1, character1.armor)));
-    character2.health = calculateHealth(character2.health, damageMultiplier(damageDealt(character1.attack1, character2.armor)));
-    character1.status = returnStatus(character1);
-    character2.status = returnStatus(character2);
-    console.log(character1.health, character2.health);
-    return fightLoop(character1, character2);
-  }else{
-    return winner;
+  if (winner){
+    var winner = game.add.text(20, 20 * h, winner + " wins", {font: "14px Arial", fill: "white" })
+    h++
   }
 }
 

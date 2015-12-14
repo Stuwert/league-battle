@@ -30,11 +30,8 @@ function getChar(character, charClass){
 
   getted.done(function(response){
     var stats = response["stats"];
-    gameObj[charClass] = new characterz(stats.armor, stats.attackdamage, stats.hp, charClass);
-    console.log(gameObj.char1, gameObj.char2);
-    $('#battle').click(function(){
-      console.log(fightLoop(gameObj.char1, gameObj.char2));
-    })
+    gameObj[charClass] = new characterz(stats.armor, stats.attackdamage, stats.hp, character);
+
   });
 
   getted.fail(function(){
@@ -42,10 +39,32 @@ function getChar(character, charClass){
   })
 }
 
+$(document).on("click", "#battle", function(){
+  console.log("Bing")
+  fightLoop(gameObj.char1, gameObj.char2);
+})
+
 function characterz(armor, attack1, health, name){
   this.armor = armor;
   this.attack1 = attack1;
   this.health = health;
   this.status = "active";
   this.name = name;
+}
+
+var game = new Phaser.Game(400, 1000, Phaser.AUTO, 'canva', {preload: preload, create: create, update: update});
+
+function preload(){
+  game.stage.backgroundColor = "black";
+  var test = "bing bong";
+
+
+}
+
+function create(){
+
+}
+
+function update(){
+
 }

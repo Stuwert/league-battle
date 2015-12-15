@@ -1,76 +1,101 @@
+$(document).ready(function(){
 
-$(function(){
-  var championsList = [];
-  for (champion in champions){
-    championsList.push(champion);
-  }
-  $('.character').autocomplete({
-    source: championsList
-  })
-});
-
-$('section').on('click', '.selectChar', function(){
-  var champion = $(this).prev().val();
-  $(this).parent().find('p').empty();
-  $(this).parent().find('p').append(champion);
-  $(this).parent().find('.img').empty();
-
-
-  var classY = $(this).parent().attr('id');
-  var newResponse = getChar(champion, classY);
+  $('section').on('click', '.selectChar', function(){
+    var classY = $(this).parent().attr('id');
+    printToScreen(classY);
   })
 
-
-
-function getChar(character, charClass){
-  var championNum = champions[character];
-
-
-  var getted = $.ajax({
-    url: "https://global.api.pvp.net/api/lol/static-data/na/v1.2/champion/"+ championNum + "?champData=all&api_key=8bcdbf10-4edf-4c5d-ab86-0d0dc4106287",
-    method: "GET",
-    dataType: "JSON"
-  });
-
-  getted.done(function(response){
-    console.log(response);
-    var stats = response["stats"];
-    gameObj[charClass] = new characterz(stats.armor, stats.attackdamage, stats.hp, character);
-    $("#" + charClass).find('.img').append('<img src="http://ddragon.leagueoflegends.com/cdn/5.24.2/img/champion/' + response["image"].full + '" />');
-  
-  });
-
-  getted.fail(function(){
-    console.log("Stuart is still sad");
+  $(document).on("click", "#battle", function(){
+    console.log(gameObj.char1);
+    console.log(gameObj.char2);
+    fightLoop(gameObj.char1, gameObj.char2);
+    $('.powers').children().css({"opacity" : 1});
+    for (statuses in attackstatus){
+      attackstatus[statuses] = null;
+    }
   })
-}
 
-$(document).on("click", "#battle", function(){
-  console.log("Bing")
-  fightLoop(gameObj.char1, gameObj.char2);
+  $('section').on('click', '[class^="attack"]', function(){
+    $(this).css({"opacity" : "0.5"});
+    var attackz = $(this).attr('class');
+    var attackid = $(this).parent().parent().attr('id');
+    attackstatus[attackid] = gameObj[attackid][attackz];
+  })
 })
 
-function characterz(armor, attack1, health, name){
-  this.armor = armor;
-  this.attack1 = attack1;
-  this.health = health;
-  this.status = "active";
-  this.name = name;
-}
+  // var p ={};
+  // tmdb.call("/configuration", p, informatzn, failure);
+  //
+  // function informatzn(response){
+  //   console.log(response);
+  // }
 
-var game = new Phaser.Game(400, 1000, Phaser.AUTO, 'canva', {preload: preload, create: create, update: update});
+  function printToScreen(classtosearch){
+    var htmlClass = "#" + classtosearch
+    $(htmlClass).find('p').empty();
+    $(htmlClass).find('.img').empty();
+    $(htmlClass).find('.powers').empty();
+    var parametersss = {
+      query: $(htmlClass).find('input').val()
+    }
+    tmdb.call("/search/person", parametersss, response, failure);
+    function response(responses){
+      var actor = responses["results"][0];
+      var movie0 = actor["known_for"][0];
+      var movie1 = actor["known_for"][1]
+      var actorArmor = 0;
+      actor["known_for"].forEach(function(item){
+        actorArmor += item["vote_average"];
+        // return +prev["vote_average"] + +current["vote_average"];
+      })
+      gameObj[classtosearch] = new characterz(actorArmor*3, movie0["popularity"] * actor["popularity"] * 7.5, movie1["popularity"] * actor["popularity"] * 7.5, 500, actor["name"]);
+      for (gamechars in gameObj){
+      }
+      $(htmlClass).find('.img').append('<img src="http://image.tmdb.org/t/p/w185' + actor["profile_path"] + '" >');
+      $(htmlClass).find('.powers').append('<img width="40" height="60" class="attack1" src="http://image.tmdb.org/t/p/w185' + movie0["poster_path"] + '" >')
+      $(htmlClass).find('.powers').append('<img width="40" height="60" class="attack2" src="http://image.tmdb.org/t/p/w185' + movie1["poster_path"] + '" >')
+    }
 
-function preload(){
-  game.stage.backgroundColor = "black";
-  var test = "bing bong";
+  }
+
+  function failure(){
+    console.log("failure");
+  }
+
+  // function getChar(character, charClass){
+  //   var championNum = champions[character];
+  //   var getted = $.ajax({
+  //     url: "https://api.themoviedb.org/3/search/person/",
+  //     method: "GET",
+  //     dataType: "JSONP",
+  //     api_key: "7fb22e55a5bafa415e02fe8d426ad2f9",
+  //     query: "tom%20hanks"
+  //   });
+  //   getted.done(function(response){
+  //     console.log(response);
+  //   });
+  //
+  //   getted.fail(function(){
+  //     console.log("Stuart is still sad");
+  //   })
+  // }
+  //
 
 
-}
 
-function create(){
+  var game = new Phaser.Game(400, 1000, Phaser.AUTO, 'canva', {preload: preload, create: create, update: update});
 
-}
+  function preload(){
+    game.stage.backgroundColor = "black";
+    var test = "bing bong";
 
-function update(){
 
-}
+  }
+
+  function create(){
+
+  }
+
+  function update(){
+
+  }

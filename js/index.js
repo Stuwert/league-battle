@@ -6,8 +6,6 @@ $(document).ready(function(){
   })
 
   $(document).on("click", "#battle", function(){
-    console.log(gameObj.char1);
-    console.log(gameObj.char2);
     fightLoop(gameObj.char1, gameObj.char2);
     $('.powers').children().css({"opacity" : 1});
     for (statuses in attackstatus){
@@ -15,7 +13,7 @@ $(document).ready(function(){
     }
   })
 
-  $('section').on('click', '[class^="attack"]', function(){
+  $('section').on('click', '[class^="movie"]', function(){
     $(this).css({"opacity" : "0.5"});
     var attackz = $(this).attr('class');
     var attackid = $(this).parent().parent().attr('id');
@@ -48,12 +46,13 @@ $(document).ready(function(){
         actorArmor += item["vote_average"];
         // return +prev["vote_average"] + +current["vote_average"];
       })
-      gameObj[classtosearch] = new characterz(actorArmor*3, movie0["popularity"] * actor["popularity"] * 7.5, movie1["popularity"] * actor["popularity"] * 7.5, 500, actor["name"]);
+
+      gameObj[classtosearch] = new characterz(actorArmor * 1.5, movie0["popularity"], movie1["popularity"], actor["popularity"], actor["name"]);
       for (gamechars in gameObj){
       }
       $(htmlClass).find('.img').append('<img src="http://image.tmdb.org/t/p/w185' + actor["profile_path"] + '" >');
-      $(htmlClass).find('.powers').append('<img width="40" height="60" class="attack1" src="http://image.tmdb.org/t/p/w185' + movie0["poster_path"] + '" >')
-      $(htmlClass).find('.powers').append('<img width="40" height="60" class="attack2" src="http://image.tmdb.org/t/p/w185' + movie1["poster_path"] + '" >')
+      $(htmlClass).find('.powers').append('<img width="40" height="60" class="movie1" src="http://image.tmdb.org/t/p/w185' + movie0["poster_path"] + '" >')
+      $(htmlClass).find('.powers').append('<img width="40" height="60" class="movie2" src="http://image.tmdb.org/t/p/w185' + movie1["poster_path"] + '" >')
     }
 
   }

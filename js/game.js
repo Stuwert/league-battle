@@ -22,8 +22,10 @@ var attackstatus = {
 
 
 function fightLoop(character1, character2){
-  var character1Damage = damageMultiplier(damageDealt(attackstatus["char2"], character1.armor));
-  var character2Damage = damageMultiplier(damageDealt(attackstatus["char1"], character2.armor));
+  var char1pop = attackstatus["char1"].popularity/attackstatus["char2"].popularity;
+  var char2pop = 1/char1pop
+  var character1Damage = damageDealt(damageMultiplier(attackstatus["char2"].attack, char2pop), character1.armor);
+  var character2Damage = damageDealt(damageMultiplier(attackstatus["char1"].attack, char1pop), character2.armor);
   character1.health = calculateHealth(character1.health, character1Damage);
   character2.health = calculateHealth(character2.health, character2Damage);
   character1.status = returnStatus(character1);
@@ -62,12 +64,23 @@ function detectWinner(character1, character2){
 }
 
 function damageDealt(attack, armor){
- return attack - armor;
+  if (armor > attack){
+    return 1
+  }else{
+    return +(attack - armor).toFixed(0);
+  }
 };
 
-function damageMultiplier(attack){
- var randomizer = Math.random() * (3 - .5) + .5;
- return +(attack * randomizer).toFixed(0);
+function getRandom(avg){
+  var min = avg - 1;
+  var max = avg + 1;
+  return Math.random() * (max - min) + min;
+}
+
+function damageMultiplier(attack, multiplier){
+  multiplier = multiplier > 1 ? multiplier/2 : multiplier * 2;
+ var randomizer = getRandom(multiplier);
+ return attack * randomizer;
 };
 
 function calculateHealth(health, attackDamage){
@@ -78,11 +91,14 @@ function returnStatus(character){
  return character.health <= 0 ? "fainted" : "alive";
 };
 
-function characterz(armor, attack1, attack2, health, name){
-  this.armor = armor;
-  this.attack1 = attack1;
-  this.attack2 = attack2;
-  this.health = health;
+
+function characterz(armor, movie0, movie1, actorpopularity, name){
+  console.log(armor);
+  this.armor = armor > 50 ? armor / 3 : armor * 1.5;
+  this.movie1 = {popularity: movie0 * 10, attack: movie0 * actorpopularity * 3};
+  this.movie2 = {popularity: movie1 * 10, attack: movie1 * actorpopularity * 3};
+  this.popularity = actorpopularity;
+  this.health = 500;
   this.status = "active";
   this.name = name;
 }
